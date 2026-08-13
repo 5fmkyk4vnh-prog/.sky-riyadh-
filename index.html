@@ -1,1 +1,289 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06111f">
+<title>سماء الرياض | رصد الشهب</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+:root{--bg:#06111f;--panel:#0c1d2f;--panel2:#10263d;--line:#1b3a57;--text:#f7fbff;--muted:#9fb3c8;--blue:#7bc8ff;--green:#9be8c9;--gold:#ffd68a;--red:#ff9da9}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:radial-gradient(circle at 15% -10%,rgba(77,163,255,.18),transparent 28%),var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Tahoma,Arial,sans-serif}
+button,select{font:inherit}.app{max-width:900px;margin:auto;padding:18px 14px 105px}.top{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:11px}.logo{width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(145deg,#173f65,#0b2035);border:1px solid #2c5577;font-size:23px}.brand h1{margin:0;font-size:23px}.brand p{margin:4px 0 0;color:var(--muted);font-size:11px}.live{display:flex;gap:7px;align-items:center;padding:8px 10px;border:1px solid #27543f;border-radius:999px;color:var(--green);font-size:11px}.dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+.view{display:none}.view.active{display:block}.hero{padding:22px;border-radius:25px;border:1px solid var(--line);background:linear-gradient(145deg,rgba(123,200,255,.10),rgba(11,28,46,.95));box-shadow:0 16px 50px rgba(0,0,0,.18)}.eyebrow{color:var(--blue);font-size:11px;font-weight:800}.hero h2{font-size:29px;line-height:1.35;margin:8px 0 10px}.hero p{margin:0;color:#c7d6e4;line-height:1.85;font-size:13px}.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:15px}.chip{padding:6px 8px;border-radius:999px;background:#091a2b;border:1px solid var(--line);color:#c7d6e4;font-size:10px}
+.title{display:flex;justify-content:space-between;align-items:end;gap:8px;margin:25px 2px 10px}.title h3{margin:0;font-size:18px}.title small{color:var(--muted);font-size:10px}.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.card{padding:15px;border-radius:19px;border:1px solid var(--line);background:linear-gradient(180deg,#10243a,#091a2b)}.label{color:var(--muted);font-size:11px}.value{font-size:23px;font-weight:850;margin-top:7px}.sub{font-size:10px;color:#89a2b9;margin-top:6px;line-height:1.55}.src{display:inline-flex;margin-top:8px;padding:5px 7px;border-radius:9px;font-size:9px;border:1px solid #27543f;color:var(--green);background:#071827}.src.forecast{border-color:#5d4c27;color:var(--gold)}
+.twocol{display:grid;grid-template-columns:1.15fr .85fr;gap:10px}.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:11px}.mini{padding:10px;border-radius:14px;background:#081a2a;border:1px solid #173a56}.mini span{font-size:10px;color:var(--muted)}.mini b{display:block;margin-top:5px;font-size:14px}.window{padding:15px;border:1px solid #5b4a27;border-radius:19px;background:linear-gradient(145deg,rgba(255,214,138,.08),#091a2b)}.window strong{display:block;font-size:22px;margin:7px 0}.window p{font-size:11px;color:#c8b991;line-height:1.7;margin:0}
+.showers{display:grid;gap:8px}.shower{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:16px;background:#0b1c2e}.shower b{display:block;font-size:13px}.shower p{margin:4px 0 0;color:var(--muted);font-size:10px}.state{padding:6px 8px;border-radius:999px;background:#103023;color:var(--green);font-size:10px}.note{padding:12px 13px;border-radius:15px;border:1px solid #2f4861;background:#091a2b;color:var(--muted);font-size:11px;line-height:1.8;margin-top:10px}
+.realbox{padding:15px;border-radius:21px;border:1px solid #24523e;background:linear-gradient(145deg,rgba(155,232,201,.06),#091a2b)}.realhead{display:flex;justify-content:space-between;gap:10px}.realhead h3{margin:0}.realhead p{margin:5px 0 0;color:var(--muted);font-size:10px;line-height:1.6}.badge{padding:6px 8px;border-radius:999px;border:1px solid #27543f;color:var(--green);font-size:10px;white-space:nowrap}.flux{width:100%;margin-top:12px;border-radius:14px;background:white;border:1px solid #284159;min-height:160px;object-fit:contain}.links{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.btn,.link{border:1px solid var(--line);background:#10263d;color:white;border-radius:12px;padding:10px 12px;font-size:12px;font-weight:750;text-decoration:none;cursor:pointer}.btn.green{background:var(--green);color:#06140e;border-color:transparent}.btn.red{background:#2d1821;color:#ffd5dd;border-color:#522b3a}
+.tracker{text-align:center;padding:20px;border-radius:22px;border:1px solid var(--line);background:linear-gradient(180deg,#10263d,#091a2b)}.counter{font-size:76px;font-weight:900;line-height:1;margin:14px 0 2px}.rate{color:var(--green);font-weight:700;margin-bottom:15px}.form{display:grid;grid-template-columns:1fr 1fr;gap:8px;text-align:right;margin-top:14px}.form label{font-size:10px;color:var(--muted)}select{width:100%;margin-top:5px;padding:10px;border-radius:12px;border:1px solid #20415e;background:#071827;color:white}.controls{display:flex;justify-content:center;gap:7px;flex-wrap:wrap;margin-top:12px}.log{display:grid;gap:7px}.logitem{display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:14px;background:#091a2b}.num{width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#14334e;color:var(--blue);font-size:11px}.logitem b{font-size:12px}.logitem span{font-size:10px;color:var(--muted)}
+.stations{display:grid;grid-template-columns:1fr 1fr;gap:9px}.station{padding:15px;border-radius:18px;border:1px solid var(--line);background:#0b1c2e}.station h4{margin:0 0 6px}.station p{margin:0;color:var(--muted);font-size:11px;line-height:1.7}.pending{display:inline-flex;margin-top:10px;padding:6px 8px;border-radius:999px;background:#2a2517;border:1px solid #5b4a27;color:var(--gold);font-size:10px}.criteria{display:grid;grid-template-columns:1fr 1fr;gap:8px}.criterion{padding:10px;border-radius:12px;border:1px solid #173852;background:#081929;font-size:11px}.pitch{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.pitchcard{padding:14px;border-radius:17px;border:1px solid var(--line);background:#0b1c2e}.pitchcard b{font-size:13px}.pitchcard p{margin:6px 0 0;color:var(--muted);font-size:10px;line-height:1.7}.principles{display:grid;gap:8px}.principle{padding:12px;border-radius:14px;background:#091a2b;border:1px solid var(--line);font-size:11px;line-height:1.7}.principle strong{color:var(--blue)}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:20;display:flex;justify-content:center;gap:3px;padding:9px 8px calc(9px + env(safe-area-inset-bottom));background:rgba(5,15,27,.94);backdrop-filter:blur(18px);border-top:1px solid var(--line)}.tab{min-width:62px;border:0;background:transparent;color:#8199af;border-radius:12px;padding:8px 6px;font-size:10px}.tab.active{background:#10263d;color:white}.tab span{display:block;font-size:16px;margin-bottom:3px}
+@media(max-width:740px){.grid{grid-template-columns:1fr 1fr}.twocol{grid-template-columns:1fr}.pitch{grid-template-columns:1fr}}@media(max-width:520px){.hero h2{font-size:24px}.strip{grid-template-columns:1fr 1fr}.stations{grid-template-columns:1fr}.form{grid-template-columns:1fr}.counter{font-size:66px}.brand p{max-width:210px}}
 
+.scorecard{display:grid;grid-template-columns:auto 1fr;gap:15px;align-items:center;padding:17px;border-radius:20px;border:1px solid #27543f;background:linear-gradient(145deg,rgba(155,232,201,.07),#091a2b)}
+.scorering{--score:0;width:96px;height:96px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--green) calc(var(--score)*1%),#163047 0)}
+.scorering:after{content:"";position:absolute;inset:8px;background:#091a2b;border-radius:50%}.scorering b{position:relative;z-index:1;font-size:25px}.scorecopy h3{margin:0 0 6px}.scorecopy p{margin:0;color:var(--muted);font-size:10px;line-height:1.7}.derived{border-color:#2e5274!important;color:var(--blue)!important}
+.chartcard{padding:13px;border-radius:18px;border:1px solid var(--line);background:#091a2b}#hourChart{width:100%;height:220px;display:block}.legend{display:flex;gap:12px;flex-wrap:wrap;color:var(--muted);font-size:9px;margin-top:7px}.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-left:4px;background:currentColor}
+#map{height:390px;border-radius:18px;border:1px solid var(--line);overflow:hidden;background:#091a2b}.maptools{display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:8px;margin-bottom:8px}.maptools input{width:100%;padding:10px;border-radius:12px;border:1px solid #20415e;background:#071827;color:#fff}.candidates{display:grid;gap:7px}.candidate{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:14px;background:#091a2b}.candidate b{font-size:12px}.candidate p{margin:4px 0 0;color:var(--muted);font-size:9px;line-height:1.55}.roadmap{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.step{padding:14px;border:1px solid var(--line);border-radius:17px;background:#0b1c2e}.step .n{width:29px;height:29px;display:grid;place-items:center;border-radius:10px;background:#14334e;color:var(--blue);font-weight:850;margin-bottom:8px}.step p{margin:6px 0 0;color:var(--muted);font-size:10px;line-height:1.65}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.kpi{padding:11px;border:1px solid var(--line);border-radius:14px;background:#091a2b}.kpi b{font-size:12px}.kpi span{display:block;margin-top:4px;color:var(--muted);font-size:9px;line-height:1.5}
+@media(max-width:740px){.roadmap{grid-template-columns:1fr}.kpis{grid-template-columns:1fr 1fr}}@media(max-width:520px){.maptools{grid-template-columns:1fr}.scorecard{grid-template-columns:86px 1fr}.scorering{width:84px;height:84px}#map{height:350px}}
+</style>
+</head>
+<body>
+<main class="app">
+<div class="top">
+  <div class="brand"><div class="logo">☄️</div><div><h1>سماء الرياض</h1><p>منصة تجريبية لرصد الشهب وتنظيم مشاهدتها في الرياض</p></div></div>
+  <div class="live"><span class="dot"></span><span id="connection">بيانات حية</span></div>
+</div>
+
+<section id="home" class="view active">
+  <div class="hero">
+    <div class="eyebrow">RIYADH METEOR WATCH</div>
+    <h2>اعرف حالة السماء، راقب نشاط الشهب، وسجّل ما تشاهده فعليًا.</h2>
+    <p>بيانات جوية حقيقية للرياض + رصد عالمي فعلي للشهب + سجل محلي يبنيه الراصدون. أي توقع يظهر بوضوح على أنه توقع، وأي رصد فعلي يظهر كمعلومة مرصودة.</p>
+    <div class="chips"><span class="chip" id="clock">الوقت: --:--</span><span class="chip" id="date">--</span><span class="chip">المرجع: مدينة الرياض</span></div>
+  </div>
+
+  <div class="title"><h3>الآن في الرياض</h3><small id="weatherUpdate">جاري التحديث...</small></div>
+  <div class="grid">
+    <div class="card"><div class="label">درجة الحرارة</div><div class="value" id="temp">--°</div><div class="sub">حالة جوية حالية</div><div class="src">● Open‑Meteo</div></div>
+    <div class="card"><div class="label">الغيوم</div><div class="value" id="cloud">--%</div><div class="sub" id="cloudTxt">تغطية السماء</div><div class="src">● Open‑Meteo</div></div>
+    <div class="card"><div class="label">مدى الرؤية</div><div class="value" id="vis">-- كم</div><div class="sub">الرؤية الجوية الحالية</div><div class="src">● Open‑Meteo</div></div>
+    <div class="card"><div class="label">الرياح</div><div class="value" id="wind">-- كم/س</div><div class="sub">سرعة الرياح الحالية</div><div class="src">● Open‑Meteo</div></div>
+  </div>
+
+  <div class="title"><h3>مؤشر المشاهدة الآن</h3><small>مشتق من الطقس — لا يقيس نشاط الشهب</small></div>
+  <div class="scorecard">
+    <div class="scorering" id="scoreRing"><b id="skyScore">--</b></div>
+    <div class="scorecopy"><h3 id="scoreTitle">جاري الحساب...</h3><p id="scoreReason">نحسبه بشفافية من الغيوم ومدى الرؤية والهطول. الرقم يساعد على تقييم صفاء الجو فقط.</p><div class="src derived">◆ مؤشر مشتق</div></div>
+  </div>
+
+  <div class="title"><h3>الليلة</h3><small>جو حقيقي + توقع واضح</small></div>
+  <div class="twocol">
+    <div class="card">
+      <div class="label">بيانات السماء</div>
+      <div class="strip">
+        <div class="mini"><span>غروب الشمس</span><b id="sunset">--:--</b></div>
+        <div class="mini"><span>شروق الشمس</span><b id="sunrise">--:--</b></div>
+        <div class="mini"><span>الرطوبة</span><b id="humidity">--%</b></div>
+        <div class="mini"><span>الوقت الآن</span><b id="daynight">--</b></div>
+      </div>
+      <div class="src">● بيانات فعلية / نموذج جوي محدث</div>
+    </div>
+    <div class="window">
+      <div class="label">أفضل نافذة جوية متوقعة الليلة</div>
+      <strong id="best">جارٍ الحساب...</strong>
+      <p id="bestWhy">نختارها من الغيوم ومدى الرؤية. هذا لا يعني أن الشهاب سيظهر في وقت محدد.</p>
+      <div class="src forecast">◆ توقع جوي</div>
+    </div>
+  </div>
+
+  <div class="title"><h3>الساعات القادمة</h3><small>غيوم + رؤية من بيانات محدثة</small></div>
+  <div class="chartcard"><canvas id="hourChart" width="850" height="220"></canvas><div class="legend"><span style="color:#7bc8ff"><i></i>الغيوم %</span><span style="color:#9be8c9"><i></i>الرؤية (على مقياس 0–100)</span></div></div>
+
+  <div class="title"><h3>الزخات النشطة</h3><small>تقويم 2026 — IMO</small></div>
+  <div class="showers" id="showers"></div>
+  <div class="note"><b>مهم:</b> ما نعرض “عدد شهب مضمون”. حتى ZHR لا يساوي العدد الذي سيراه الشخص فعليًا؛ الظروف المحلية وموقع نقطة الإشعاع والتلوث الضوئي تؤثر على المشاهدة.</div>
+</section>
+
+<section id="meteors" class="view">
+  <div class="hero"><div class="eyebrow">GLOBAL METEOR DATA</div><h2>رصد عالمي فعلي للبرشاويات 2026.</h2><p>الرسم التالي يتم تحميله مباشرة من Global Meteor Network. هذا قياس رصد حقيقي من شبكة كاميرات، وليس رقمًا اخترعناه داخل التطبيق.</p></div>
+  <div class="title"><h3>Perseids — 2026</h3><small>مصدر خارجي مباشر</small></div>
+  <div class="realbox">
+    <div class="realhead"><div><h3>تدفق البرشاويات</h3><p>مخطط رصد GMN لعام 2026. إذا حدث المصدر ملفه، التطبيق يعيد تحميل الصورة منه.</p></div><span class="badge">رصد فعلي</span></div>
+    <img id="gmnImg" class="flux" src="https://globalmeteornetwork.org/flux/plots/flux_PER_sol%3D123.00-147.00_year_2026.png" alt="رصد البرشاويات 2026 من GMN">
+    <div id="gmnFail" class="note" style="display:none">تعذر تحميل الرسم داخل الصفحة. افتح المصدر مباشرة من الزر أدناه.</div>
+    <div class="links"><a class="link" target="_blank" rel="noopener" href="https://globalmeteornetwork.org/flux/">فتح GMN</a><a class="link" target="_blank" rel="noopener" href="https://www.imo.net/resources/calendar/">تقويم IMO</a></div>
+  </div>
+  <div class="title"><h3>وش نوع البيانات؟</h3><small>نفصلها بوضوح</small></div>
+  <div class="pitch">
+    <div class="pitchcard"><b>رصد فعلي</b><p>شهب حدثت وسجلتها كاميرات أو راصدون. مثل GMN وسجلنا المحلي.</p></div>
+    <div class="pitchcard"><b>توقع فلكي</b><p>موعد نشاط الزخة أو ذروتها. يفيد في التخطيط لكنه ليس رصدًا بعد.</p></div>
+    <div class="pitchcard"><b>توقع جوي</b><p>غيوم ورؤية متوقعة لاختيار أفضل ساعة للمشاهدة.</p></div>
+  </div>
+</section>
+
+<section id="observe" class="view">
+  <div class="hero"><div class="eyebrow">LOCAL OBSERVATION</div><h2>سجل الشهب التي تشاهدها فعلًا.</h2><p>كل ضغطة تحفظ وقت الشهاب على جهازك مع الاتجاه واللمعان والجو وقت آخر تحديث. ويمكن تصدير الجلسة CSV.</p></div>
+  <div class="title"><h3>جلسة الرصد</h3><small>تحفظ محليًا على الجهاز</small></div>
+  <div class="tracker">
+    <div class="label">الشهب المسجلة</div><div class="counter" id="count">0</div><div class="rate" id="rate">0 شهاب/ساعة</div>
+    <div class="form">
+      <label>الاتجاه<select id="direction"><option>غير محدد</option><option>شمال</option><option>شمال شرق</option><option>شرق</option><option>جنوب شرق</option><option>جنوب</option><option>جنوب غرب</option><option>غرب</option><option>شمال غرب</option></select></label>
+      <label>اللمعان<select id="brightness"><option>غير محدد</option><option>خافت</option><option>متوسط</option><option>ساطع</option><option>شديد السطوع</option></select></label>
+    </div>
+    <div class="controls"><button class="btn green" onclick="recordMeteor()">☄️ سجل شهاب الآن</button><button class="btn" onclick="newSession()">جلسة جديدة</button><button class="btn" onclick="exportCSV()">تصدير CSV</button><button class="btn red" onclick="undoMeteor()">تراجع</button></div>
+    <div class="strip">
+      <div class="mini"><span>بداية الجلسة</span><b id="startTxt">لم تبدأ</b></div>
+      <div class="mini"><span>مدة الجلسة</span><b id="duration">00:00:00</b></div>
+      <div class="mini"><span>الغيوم</span><b id="sessionCloud">--%</b></div>
+      <div class="mini"><span>الرؤية</span><b id="sessionVis">-- كم</b></div>
+    </div>
+  </div>
+  <div class="title"><h3>آخر التسجيلات</h3><small id="logCount">0 سجل</small></div>
+  <div class="log" id="log"><div class="note">ما سجلنا أي شهاب حتى الآن.</div></div>
+</section>
+
+<section id="stations" class="view">
+  <div class="hero"><div class="eyebrow">STATION PLANNER</div><h2>اختيار مواقع المحطات على خريطة فعلية — بدون اختراع مواقع.</h2><p>اضغط على الخريطة لتضيف موقعًا مرشحًا. يبقى “مرشحًا” فقط إلى أن يتم تقييم التلوث الضوئي والسلامة والوصول والتصاريح ميدانيًا.</p></div>
+  <div class="title"><h3>خريطة المواقع المرشحة</h3><small>Leaflet + OpenStreetMap</small></div>
+  <div class="maptools"><input id="candidateName" placeholder="اسم المرشح، مثال: محطة تجريبية 1"><select id="candidateRating"><option>السماء: غير مقيمة</option><option>السماء: ممتاز</option><option>السماء: جيد</option><option>السماء: متوسط</option></select><button class="btn" id="useLocationBtn">استخدم موقعي</button></div>
+  <div id="map"></div>
+  <div class="note">استخدام “موقعي” يحتاج إذن المتصفح ويستخدم الإحداثيات داخل الصفحة لتوسيط الخريطة فقط. لا توجد قاعدة بيانات خاصة تستقبل موقعك في هذا النموذج.</div>
+  <div class="title"><h3>المواقع المحفوظة</h3><small>على هذا الجهاز فقط</small></div>
+  <div class="candidates" id="candidateList"><div class="note">اضغط على الخريطة لإضافة أول موقع مرشح.</div></div>
+  <div class="title"><h3>معايير اعتماد المحطة</h3><small>قبل توجيه الجمهور إليها</small></div>
+  <div class="criteria"><div class="criterion">✓ انخفاض التلوث الضوئي</div><div class="criterion">✓ سلامة وسهولة الوصول</div><div class="criterion">✓ مواقف ومساحة مشاهدة</div><div class="criterion">✓ وضوح الأفق</div><div class="criterion">✓ تصريح واستخدام نظامي</div><div class="criterion">✓ ملاءمة للعائلات والزوار</div></div>
+  <div class="note"><b>السلامة أولًا:</b> الخريطة للتخطيط فقط، وليست توجيهًا للذهاب إلى أماكن معزولة أو غير معتمدة.</div>
+</section>
+
+<section id="idea" class="view">
+  <div class="hero"><div class="eyebrow">GOVERNMENT DEMO</div><h2>الفكرة تعمل أمام الجهة، مو مجرد كلام.</h2><p>النموذج يقرأ طقس الرياض، يعرض رصدًا عالميًا حقيقيًا، ويسجل مشاهدات محلية. بعد نجاح النسخة الأولى يمكن ربط كاميرات آلية ومحطات معتمدة.</p></div>
+  <div class="title"><h3>قيمة المبادرة</h3><small>نسخة أولى قابلة للتوسع</small></div>
+  <div class="pitch"><div class="pitchcard"><b>تجربة عامة</b><p>فعالية مشاهدة واضحة الموعد والمكان بدل أن تبقى الزخات معلومة فلكية فقط.</p></div><div class="pitchcard"><b>بيانات محلية</b><p>سجل خاص بالرياض: متى شوهدت الشهب وفي أي ظروف جوية.</p></div><div class="pitchcard"><b>توسع تدريجي</b><p>محطة واحدة أولًا، ثم كاميرات آلية، ثم شبكة بعد إثبات النجاح.</p></div></div>
+  <div class="title"><h3>مسار التنفيذ</h3><small>نبدأ صغير ثم نتوسع</small></div>
+  <div class="roadmap"><div class="step"><div class="n">1</div><b>محطة تجريبية واحدة</b><p>موقع آمن ومظلم ومصرح، مع فعالية مشاهدة ورصد منظم.</p></div><div class="step"><div class="n">2</div><b>إضافة رصد آلي</b><p>كاميرا رصد مناسبة تفصل القياس الآلي عن بلاغات الجمهور.</p></div><div class="step"><div class="n">3</div><b>شبكة حول الرياض</b><p>التوسع فقط إذا أثبتت التجربة الإقبال وجودة الرصد.</p></div></div>
+  <div class="title"><h3>مؤشرات نجاح التجربة</h3><small>أشياء بسيطة وقابلة للقياس</small></div>
+  <div class="kpis"><div class="kpi"><b>حضور الفعالية</b><span>عدد الزوار المستفيدين.</span></div><div class="kpi"><b>ساعات الرصد</b><span>الفترة التي كانت السماء مناسبة فيها.</span></div><div class="kpi"><b>الشهب المسجلة</b><span>يدويًا وآليًا إن توفر.</span></div><div class="kpi"><b>اكتمال البيانات</b><span>وقت + جو + موقع لكل جلسة.</span></div></div>
+  <div class="title"><h3>قواعد المصداقية</h3><small>عشان العرض يكون قويًا</small></div>
+  <div class="principles">
+    <div class="principle"><strong>1.</strong> أي رقم حي يظهر مع مصدره.</div>
+    <div class="principle"><strong>2.</strong> الرصد الفعلي لا يخلط مع التوقع الفلكي أو الجوي.</div>
+    <div class="principle"><strong>3.</strong> ما نعد الزائر بعدد شهب مضمون.</div>
+    <div class="principle"><strong>4.</strong> مواقع المحطات لا تعتمد قبل تقييم السلامة والإضاءة والتصاريح.</div>
+    <div class="principle"><strong>5.</strong> نجاح النسخة الأولى يقاس بعدد جلسات الرصد وجودة البيانات وإقبال الزوار.</div>
+  </div>
+</section>
+</main>
+
+<nav class="nav">
+<button class="tab active" data-view="home"><span>⌂</span>اليوم</button>
+<button class="tab" data-view="meteors"><span>☄</span>الشهب</button>
+<button class="tab" data-view="observe"><span>●</span>الرصد</button>
+<button class="tab" data-view="stations"><span>⌖</span>المحطات</button>
+<button class="tab" data-view="idea"><span>◇</span>الفكرة</button>
+</nav>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const R={lat:24.7136,lon:46.6753,tz:'Asia/Riyadh'};
+const WEATHER=`https://api.open-meteo.com/v1/forecast?latitude=${R.lat}&longitude=${R.lon}&current=temperature_2m,relative_humidity_2m,cloud_cover,wind_speed_10m,visibility,precipitation,is_day&hourly=cloud_cover,visibility,precipitation_probability&daily=sunrise,sunset&timezone=${encodeURIComponent(R.tz)}&forecast_days=2`;
+let weather=null;
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.getElementById(b.dataset.view).classList.add('active');scrollTo({top:0,behavior:'smooth'})});
+
+function updateClock(){
+ const n=new Date();
+ document.getElementById('clock').textContent='الوقت في الرياض: '+new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(n);
+ document.getElementById('date').textContent=new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,weekday:'long',day:'numeric',month:'long',year:'numeric'}).format(n);
+}
+updateClock();setInterval(updateClock,1000);
+
+function km(v){return v==null?'--':(v/1000).toFixed(v>=10000?0:1)}
+function cloudWord(v){return v<=10?'سماء شبه صافية':v<=30?'غيوم قليلة':v<=60?'غيوم متوسطة':v<=85?'غيوم كثيرة':'سماء ملبدة غالبًا'}
+function timeFmt(s){if(!s)return'--:--';return new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit'}).format(new Date(s))}
+
+async function loadWeather(){
+ try{
+  const res=await fetch(WEATHER,{cache:'no-store'});if(!res.ok)throw Error(res.status);
+  const d=await res.json();weather=d;const c=d.current||{};
+  temp.textContent=(c.temperature_2m??'--')+'°';cloud.textContent=(c.cloud_cover??'--')+'%';cloudTxt.textContent=c.cloud_cover==null?'تغطية السماء':cloudWord(c.cloud_cover);vis.textContent=km(c.visibility)+' كم';wind.textContent=(c.wind_speed_10m??'--')+' كم/س';humidity.textContent=(c.relative_humidity_2m??'--')+'%';daynight.textContent=c.is_day===1?'نهار':c.is_day===0?'ليل':'--';
+  sessionCloud.textContent=(c.cloud_cover??'--')+'%';sessionVis.textContent=km(c.visibility)+' كم';
+  const nowR=new Date(new Date().toLocaleString('en-US',{timeZone:R.tz})),h=nowR.getHours();
+  sunset.textContent=timeFmt(d.daily?.sunset?.[0]);sunrise.textContent=timeFmt(d.daily?.sunrise?.[h<12?0:1]);
+  weatherUpdate.textContent='آخر تحديث للنموذج: '+(c.time?new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit'}).format(new Date(c.time)):'الآن');
+  connection.textContent='متصل بالبيانات';bestWindow(d);skyScoreCalc(c);drawHourChart(d);
+ }catch(e){console.error(e);connection.textContent='تعذر التحديث';weatherUpdate.textContent='تعذر جلب الطقس';best.textContent='غير متاح الآن';bestWhy.textContent='يحتاج التطبيق اتصالًا بالإنترنت لجلب بيانات الرياض.'}
+}
+function bestWindow(d){
+ const t=d.hourly?.time||[],cl=d.hourly?.cloud_cover||[],vv=d.hourly?.visibility||[],now=new Date(),arr=[];
+ for(let i=0;i<t.length;i++){
+  const x=new Date(t[i]),dh=(x-now)/36e5;if(dh<-1||dh>20)continue;
+  const hh=Number(new Intl.DateTimeFormat('en-US',{timeZone:R.tz,hour:'2-digit',hour12:false}).format(x));
+  if(!(hh>=19||hh<=5))continue;
+  const c=Number(cl[i]??100),v=Number(vv[i]??0)/1000,score=(100-c)+Math.min(v,30)*.35;
+  arr.push({x,c,v,score});
+ }
+ arr.sort((a,b)=>b.score-a.score);if(!arr.length){best.textContent='لا توجد نافذة ليلية ضمن البيانات';return}
+ const a=arr[0],b=new Date(a.x.getTime()+36e5),f=new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit'});
+ best.textContent=f.format(a.x)+' – '+f.format(b);bestWhy.textContent=`توقع غيوم ${Math.round(a.c)}% ورؤية نحو ${a.v.toFixed(0)} كم. هذا اختيار جوي فقط، وليس موعد شهاب محدد.`;
+}
+
+function skyScoreCalc(c){
+ const clouds=Number(c.cloud_cover??100),vk=Number(c.visibility??0)/1000,rain=Number(c.precipitation??0);
+ const cs=Math.max(0,100-clouds),vs=Math.min(100,(vk/30)*100),pen=rain>0?Math.min(45,rain*20):0;
+ let score=Math.round(cs*.65+vs*.35-pen);score=Math.max(0,Math.min(100,score));
+ document.getElementById('skyScore').textContent=score;document.getElementById('scoreRing').style.setProperty('--score',score);
+ let title='ضعيف للمشاهدة';if(score>=80)title='ممتاز من ناحية الجو';else if(score>=65)title='جيد جدًا من ناحية الجو';else if(score>=45)title='متوسط';
+ document.getElementById('scoreTitle').textContent=title;
+ document.getElementById('scoreReason').textContent=`الغيوم ${Math.round(clouds)}%، الرؤية نحو ${vk.toFixed(0)} كم${rain>0?`، وهطول حالي ${rain} مم`:'، ولا يظهر هطول حالي'}. المؤشر لا يقيس نشاط الشهب نفسه.`;
+}
+function drawHourChart(d){
+ const cv=document.getElementById('hourChart');if(!cv)return;const ctx=cv.getContext('2d'),ratio=window.devicePixelRatio||1,rect=cv.getBoundingClientRect(),W=Math.max(620,rect.width),H=220;
+ cv.width=W*ratio;cv.height=H*ratio;ctx.setTransform(ratio,0,0,ratio,0,0);ctx.clearRect(0,0,W,H);
+ const tt=d.hourly?.time||[],cc=d.hourly?.cloud_cover||[],vv=d.hourly?.visibility||[],now=new Date(),pts=[];
+ for(let i=0;i<tt.length&&pts.length<12;i++){const t=new Date(tt[i]);if(t<now)continue;pts.push({t,c:Number(cc[i]??0),v:Math.min(100,(Number(vv[i]??0)/30000)*100)})}
+ if(!pts.length)return;const L=34,Rt=10,T=12,B=34,w=W-L-Rt,h=H-T-B;
+ ctx.strokeStyle='#173956';ctx.fillStyle='#8199af';ctx.font='10px Arial';[0,25,50,75,100].forEach(v=>{const y=T+h-(v/100)*h;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(W-Rt,y);ctx.stroke();ctx.fillText(String(v),5,y+3)});
+ function line(key,color){ctx.strokeStyle=color;ctx.lineWidth=2;ctx.beginPath();pts.forEach((p,i)=>{const x=L+(i/(pts.length-1||1))*w,y=T+h-(p[key]/100)*h;i?ctx.lineTo(x,y):ctx.moveTo(x,y)});ctx.stroke()}
+ line('c','#7bc8ff');line('v','#9be8c9');ctx.fillStyle='#8199af';ctx.textAlign='center';pts.forEach((p,i)=>{if(i%2&&pts.length>8)return;const x=L+(i/(pts.length-1||1))*w;ctx.fillText(new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit'}).format(p.t),x,H-10)});ctx.textAlign='start';
+}
+window.addEventListener('resize',()=>{if(weather)drawHourChart(weather)});
+
+loadWeather();setInterval(loadWeather,15*60*1000);
+
+const showers2026=[
+ {ar:'البرشاويات',en:'Perseids',s:'2026-07-17T00:00:00+03:00',e:'2026-08-24T23:59:59+03:00',note:'نشطة 17 يوليو–24 أغسطس، والذروة 13 أغسطس 2026.'},
+ {ar:'دلتا الدلويات الجنوبية',en:'Southern delta Aquariids',s:'2026-07-12T00:00:00+03:00',e:'2026-08-23T23:59:59+03:00',note:'نشطة 12 يوليو–23 أغسطس 2026.'},
+ {ar:'ألفا الجديّات',en:'alpha Capricornids',s:'2026-07-03T00:00:00+03:00',e:'2026-08-15T23:59:59+03:00',note:'نشطة 3 يوليو–15 أغسطس 2026.'}
+];
+function renderShowers(){
+ const n=new Date();showers.innerHTML=showers2026.map(s=>{const a=n>=new Date(s.s)&&n<=new Date(s.e);return `<div class="shower"><div><b>${s.ar} <span style="color:#8098ae;font-weight:500">— ${s.en}</span></b><p>${s.note}</p></div><span class="state">${a?'نشطة الآن':n<new Date(s.s)?'قادمة':'انتهت'}</span></div>`}).join('');
+}renderShowers();
+
+gmnImg.onerror=()=>{gmnImg.style.display='none';gmnFail.style.display='block'};
+
+let session=JSON.parse(localStorage.getItem('skyRiyadhSessionV3')||'null')||{start:null,meteors:[]};
+function save(){localStorage.setItem('skyRiyadhSessionV3',JSON.stringify(session))}
+function newSession(){session={start:new Date().toISOString(),meteors:[]};save();renderSession()}
+function recordMeteor(){
+ if(!session.start)session.start=new Date().toISOString();const c=weather?.current||{};
+ session.meteors.push({time:new Date().toISOString(),direction:direction.value,brightness:brightness.value,cloud:c.cloud_cover??'',visibility_km:c.visibility!=null?(c.visibility/1000).toFixed(1):''});save();renderSession();if(navigator.vibrate)navigator.vibrate(35)
+}
+function undoMeteor(){if(session.meteors.length){session.meteors.pop();save();renderSession()}}
+function dur(ms){const s=Math.max(0,Math.floor(ms/1000)),h=Math.floor(s/3600),m=Math.floor((s%3600)/60),q=s%60;return[h,m,q].map(x=>String(x).padStart(2,'0')).join(':')}
+function renderSession(){
+ const c=session.meteors.length;count.textContent=c;logCount.textContent=c+' سجل';
+ if(session.start){const st=new Date(session.start),hours=Math.max((Date.now()-st)/36e5,1/3600);rate.textContent=(c/hours).toFixed(c/hours<10?1:0)+' شهاب/ساعة';startTxt.textContent=new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit'}).format(st);duration.textContent=dur(Date.now()-st)}
+ else{rate.textContent='0 شهاب/ساعة';startTxt.textContent='لم تبدأ';duration.textContent='00:00:00'}
+ if(!c){log.innerHTML='<div class="note">ما سجلنا أي شهاب حتى الآن.</div>';return}
+ log.innerHTML=session.meteors.slice().reverse().slice(0,30).map((m,i)=>{const t=new Intl.DateTimeFormat('ar-SA',{timeZone:R.tz,hour:'2-digit',minute:'2-digit',second:'2-digit'}).format(new Date(m.time));const meta=[m.direction!='غير محدد'?m.direction:'',m.brightness!='غير محدد'?m.brightness:'',m.cloud!==''?'غيوم '+m.cloud+'%':''].filter(Boolean).join(' • ')||'بدون تفاصيل';return `<div class="logitem"><div class="num">${c-i}</div><div><b>شهاب مسجل — ${t}</b><span>${meta}</span></div><span style="color:#9be8c9">فعلي</span></div>`}).join('')
+}
+function exportCSV(){
+ if(!session.meteors.length){alert('ما فيه تسجيلات لتصديرها.');return}
+ const rows=[['number','timestamp_iso','direction','brightness','cloud_percent','visibility_km'],...session.meteors.map((m,i)=>[i+1,m.time,m.direction,m.brightness,m.cloud,m.visibility_km])],esc=v=>'"'+String(v??'').replaceAll('"','""')+'"',csv='\uFEFF'+rows.map(r=>r.map(esc).join(',')).join('\n'),blob=new Blob([csv],{type:'text/csv;charset=utf-8'}),u=URL.createObjectURL(blob),a=document.createElement('a');a.href=u;a.download='sky-riyadh-observation.csv';a.click();URL.revokeObjectURL(u)
+}
+
+renderSession();setInterval(renderSession,1000);
+
+// خريطة اختيار مواقع مرشحة للمحطات
+let stationMap=null,stationLayer=null,candidates=JSON.parse(localStorage.getItem('skyRiyadhCandidates')||'[]');
+function esc(s){return String(s).replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+function saveCandidates(){localStorage.setItem('skyRiyadhCandidates',JSON.stringify(candidates))}
+function renderCandidates(){
+ if(!stationMap)return;stationLayer.clearLayers();
+ candidates.forEach(c=>L.marker([c.lat,c.lon]).addTo(stationLayer).bindPopup(`<b>${esc(c.name)}</b><br>${esc(c.rating)}<br>${c.lat.toFixed(5)}, ${c.lon.toFixed(5)}`));
+ const box=document.getElementById('candidateList');if(!candidates.length){box.innerHTML='<div class="note">اضغط على الخريطة لإضافة أول موقع مرشح.</div>';return}
+ box.innerHTML=candidates.map((c,i)=>`<div class="candidate"><div><b>${esc(c.name)}</b><p>${esc(c.rating)} • ${c.lat.toFixed(5)}, ${c.lon.toFixed(5)} • مرشح فقط، غير معتمد</p></div><button class="btn red" data-del="${i}">حذف</button></div>`).join('');
+ box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{candidates.splice(Number(b.dataset.del),1);saveCandidates();renderCandidates()});
+}
+function initStationMap(){
+ if(stationMap||!window.L)return;
+ stationMap=L.map('map').setView([R.lat,R.lon],9);L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(stationMap);stationLayer=L.layerGroup().addTo(stationMap);
+ stationMap.on('click',e=>{const nm=document.getElementById('candidateName').value.trim()||`موقع مرشح ${candidates.length+1}`,rating=document.getElementById('candidateRating').value;candidates.push({name:nm,rating,lat:e.latlng.lat,lon:e.latlng.lng,created:new Date().toISOString()});saveCandidates();renderCandidates()});renderCandidates();
+ document.getElementById('useLocationBtn').onclick=()=>{if(!navigator.geolocation){alert('المتصفح لا يدعم تحديد الموقع.');return}navigator.geolocation.getCurrentPosition(pos=>{stationMap.setView([pos.coords.latitude,pos.coords.longitude],12);L.circleMarker([pos.coords.latitude,pos.coords.longitude],{radius:7}).addTo(stationLayer).bindPopup('موقعك الحالي على جهازك').openPopup()},()=>alert('ما قدرنا نستخدم موقعك. تأكد من السماح بإذن الموقع.'))};
+}
+initStationMap();
+document.querySelector('[data-view="stations"]').addEventListener('click',()=>setTimeout(()=>{initStationMap();stationMap&&stationMap.invalidateSize()},120));
+</script>
+</body>
+</html>
